@@ -1,0 +1,8 @@
+{
+  "name": "AquaScout: Global Water Intelligence",
+  "description": "AI-driven dashboard analyzing global water recovery methods, sustainability, and Kaggle insights through interactive visualizations and secure collaborative forums.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

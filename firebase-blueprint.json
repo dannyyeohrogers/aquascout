@@ -1,0 +1,58 @@
+{
+  "$schema": "https://aistudio.google.com/blueprint_schema.json",
+  "collections": [
+    {
+      "collection_id": "technologies",
+      "description": "Water desalination and recovery technologies.",
+      "security_rules": {
+        "read": "true",
+        "write": "request.auth != null"
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "costRating": { "type": "number" },
+          "energyIntensity": { "type": "number" },
+          "carbonFootprint": { "type": "number" },
+          "brineImpact": { "type": "number" },
+          "recoveryRate": { "type": "number" },
+          "description": { "type": "string" },
+          "pros": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "cons": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "historyContext": { "type": "string" },
+          "sustainabilityScore": { "type": "number" },
+          "lat": { "type": "number" },
+          "lng": { "type": "number" }
+        },
+        "required": ["name", "category", "description"]
+      }
+    },
+    {
+      "collection_id": "comments",
+      "description": "Community comments on technologies.",
+      "security_rules": {
+        "read": "true",
+        "write": "request.auth != null"
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "techId": { "type": "string" },
+          "author": { "type": "string" },
+          "content": { "type": "string" },
+          "timestamp": { "type": "string" }
+        },
+        "required": ["techId", "author", "content"]
+      }
+    }
+  ]
+}

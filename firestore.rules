@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Default safety net: Deny all reads and writes by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Authentication & Identification Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isServerAdmin() {
+      return isSignedIn() && (request.auth.uid == 'server-admin' || (request.auth.token != null && request.auth.token.email == 'server-admin@serviceaccount.gcp'));
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- 2. Technologies Collection Security Rules ---
+    match /technologies/{techId} {
+      allow read, write: if true;
+    }
+
+    // --- 3. Forum Comments Collection Security Rules ---
+    match /comments/{commentId} {
+      allow read, write: if true;
+    }
+
+    function isValidComment(data) {
+      return data.techId is string && data.techId.size() > 0 && data.techId.size() <= 128
+        && data.author is string && data.author.size() > 0 && data.author.size() <= 120
+        && data.content is string && data.content.size() > 0 && data.content.size() <= 4000
+        && (!data.keys().hasAny(['timestamp']) || (data.timestamp is string && data.timestamp.size() <= 100))
+        && (!data.keys().hasAny(['id']) || (data.id is string && data.id.size() <= 128));
+    }
+  }
+}
